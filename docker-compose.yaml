@@ -22,11 +22,13 @@ services:
       - "traefik.http.routers.koha-staff.tls=true"
       - "traefik.http.routers.koha-staff.tls.certResolver=sslresolver"
       - "traefik.http.services.koha-staff-lb.loadbalancer.server.port=8081"
+      - "traefik.http.routers.koha-staff.service=koha-staff-lb@docker"
       - "traefik.http.routers.koha-opac.rule=Host(`koha.lipniacki.sh`)"
       - "traefik.http.routers.koha-opac.entrypoints=websecure"
       - "traefik.http.routers.koha-opac.tls=true"
       - "traefik.http.routers.koha-opac.tls.certResolver=sslresolver"
       - "traefik.http.services.koha-opac-lb.loadbalancer.server.port=8080"
+      - "traefik.http.routers.koha-opac.service=koha-opac-lb@docker"
     depends_on:
       - db
       - rabbitmq
