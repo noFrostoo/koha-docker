@@ -1,12 +1,12 @@
 version: "3.9"
 services:
   koha:
-    image: teogramm/koha:24.11
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 8080:8080
       - 8081:8081
-    networks:
-      - koha
     cap_add:
       - DAC_READ_SEARCH
       - SYS_NICE
@@ -17,10 +17,26 @@ services:
       DB_NAME: koha_teolib
       MEMCACHED_SERVERS: memcached:11211
       MB_HOST: rabbitmq
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.koha-staff.rule=Host(`koha-staff.lipniacki.sh`)"
+      - "traefik.http.routers.koha-staff.entrypoints=websecure"
+      - "traefik.http.routers.koha-staff.tls=true"
+      - "traefik.http.routers.hoha-staff.tls.certResolver=sslresolver"
+      - "traefik.http.services.koha-staff-lb.loadbalancer.server.port=8081"
+      - "traefik.http.routers.koha-opac.rule=Host(`koha.lipniacki.sh`)"
+      - "traefik.http.routers.koha-opac.entrypoints=websecure"
+      - "traefik.http.routers.koha-opac.tls=true"
+      - "traefik.http.routers.hoha-opac.tls.certResolver=sslresolver"
+      - "traefik.http.services.koha-opac-lb.loadbalancer.server.port=8080"
     depends_on:
       - db
       - rabbitmq
       - memcached
+    networks:
+      - koha
+      - traefik
 
   rabbitmq:
       image: docker.io/rabbitmq:3
@@ -50,4 +66,7 @@ volumes:
     mariadb-koha:
 
 networks:
-    koha:
+  traefik:
+    external: true
+  koha:
+    name: koha

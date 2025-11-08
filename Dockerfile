@@ -1,11 +1,9 @@
-FROM debian:bookworm
+FROM debian:Trixie
 
 ENV DEBIAN_FRONTEND noninteractive
-ARG S6_OVERLAY_VERSION=3.2.0.2
-ARG KOHA_VERSION=24.11
+ARG S6_OVERLAY_VERSION=3.2.1.0 
+ARG KOHA_VERSION=25.05
 ARG TARGETARCH
-
-LABEL org.opencontainers.image.source=https://github.com/teorgamm/koha-docker
 
 RUN apt-get  update \
     && apt-get install -y \
