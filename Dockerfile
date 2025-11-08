@@ -1,4 +1,4 @@
-FROM debian:Trixie
+FROM debian:trixie
 
 ENV DEBIAN_FRONTEND noninteractive
 ARG S6_OVERLAY_VERSION=3.2.1.0 
